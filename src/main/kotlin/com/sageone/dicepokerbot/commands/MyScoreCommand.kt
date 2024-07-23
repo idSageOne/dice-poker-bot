@@ -26,22 +26,22 @@ class MyScoreCommand(
         val user = userService.createUser(message)
         val stats = statService.readOrCreateUserStats(user)
         val result = "${emoji(128202)} ${bold("Показатели игрока ${user.telegramHandle}")} ${emoji(128202)}\n\n" +
-                "${bold("${EStats.HIGH_CARD.description}:")} ${moneyFormatter(stats.highCard!!)}\n" +
-                "${bold("${EStats.PAIR.description}:")} ${moneyFormatter(stats.pair!!)}\n" +
-                "${bold("${EStats.TWO_PAIR.description}:")} ${moneyFormatter(stats.twoPair!!)}\n" +
-                "${bold("${EStats.TRIPLE.description}:")} ${moneyFormatter(stats.triple!!)}\n" +
-                "${bold("${EStats.FULL_HOUSE.description}:")} ${moneyFormatter(stats.fullHouse!!)}\n" +
-                "${bold("${EStats.SMALL_STRAIGHT.description}:")} ${moneyFormatter(stats.smallStraight!!)}\n" +
-                "${bold("${EStats.BIG_STRAIGHT.description}:")} ${moneyFormatter(stats.bigStraight!!)}\n" +
-                "${bold("${EStats.QUAD.description}:")} ${moneyFormatter(stats.quad!!)}\n" +
-                "${bold("${EStats.POKER.description}:")} ${moneyFormatter(stats.poker!!)}\n" +
-                "${bold("${EStats.HANDS_PLAYED.description}:")} ${moneyFormatter(stats.handsPlayed!!)}\n" +
-                "${bold("${EStats.WHITE_SET.description}:")} ${moneyFormatter(stats.handsPlayedWhiteSet!!)}\n" +
-                "${bold("${EStats.BLACK_SET.description}:")} ${moneyFormatter(stats.handsPlayedBlackSet!!)}\n" +
-                "${bold("${EStats.PAIRS_IN_A_ROW.description}:")} ${moneyFormatter(stats.pairsInARow!!)}\n" +
-                "${bold("${EStats.POINTS_EARNED.description}:")} ${moneyFormatter(stats.pointsEarned!!)}\n" +
-                "${bold("${EStats.MONEY_EARNED.description}:")} ${moneyFormatter(stats.moneyEarned!!)} $\n" +
-                "${bold("${EStats.HIGHEST_SCORE.description}:")} ${moneyFormatter(stats.highestScore!!)}\n"
+                "${bold("${EStats.HIGH_CARD.description}:")} ${moneyFormatter(stats.highCard)}\n" +
+                "${bold("${EStats.PAIR.description}:")} ${moneyFormatter(stats.pair)}\n" +
+                "${bold("${EStats.TWO_PAIR.description}:")} ${moneyFormatter(stats.twoPair)}\n" +
+                "${bold("${EStats.TRIPLE.description}:")} ${moneyFormatter(stats.triple)}\n" +
+                "${bold("${EStats.FULL_HOUSE.description}:")} ${moneyFormatter(stats.fullHouse)}\n" +
+                "${bold("${EStats.SMALL_STRAIGHT.description}:")} ${moneyFormatter(stats.smallStraight)}\n" +
+                "${bold("${EStats.BIG_STRAIGHT.description}:")} ${moneyFormatter(stats.bigStraight)}\n" +
+                "${bold("${EStats.QUAD.description}:")} ${moneyFormatter(stats.quad)}\n" +
+                "${bold("${EStats.POKER.description}:")} ${moneyFormatter(stats.poker)}\n" +
+                "${bold("${EStats.HANDS_PLAYED.description}:")} ${moneyFormatter(stats.handsPlayed)}\n" +
+                "${bold("${EStats.WHITE_SET.description}:")} ${moneyFormatter(stats.handsPlayedWhiteSet)}\n" +
+                "${bold("${EStats.BLACK_SET.description}:")} ${moneyFormatter(stats.handsPlayedBlackSet)}\n" +
+                "${bold("${EStats.PAIRS_IN_A_ROW.description}:")} ${moneyFormatter(stats.pairsInARow)}\n" +
+                "${bold("${EStats.POINTS_EARNED.description}:")} ${moneyFormatter(stats.pointsEarned)}\n" +
+                "${bold("${EStats.MONEY_EARNED.description}:")} ${moneyFormatter(stats.moneyEarned)} $\n" +
+                "${bold("${EStats.HIGHEST_SCORE.description}:")} ${moneyFormatter(stats.highestScore)}\n"
 
         val chatId = message.chat.id.toString()
         val replyId = message.messageId

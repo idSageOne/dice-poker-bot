@@ -25,7 +25,7 @@ class TopScoreCommand(
         if (topScorers != null) {
             for (i in topScorers.indices) {
                 val username = topScorers[i].userId!!.telegramHandle
-                val points = topScorers[i].pointsEarned!!
+                val points = topScorers[i].pointsEarned
                 result += "\n${i + 1}. $username:   " +
                         "${bold("${moneyFormatter(points)} баллов")}\n"
             }

@@ -1,6 +1,5 @@
 package com.sageone.dicepokerbot.commands
 
-import com.sageone.dicepokerbot.EStats
 import com.sageone.dicepokerbot.services.AchievementService
 import com.sageone.dicepokerbot.services.StatService
 import com.sageone.dicepokerbot.services.UserService
@@ -29,9 +28,6 @@ class PokerCommand(
         val stats = statService.readOrCreateUserStats(user)
         val achievements = achievementService.readOrCreateUserAchievements(user)
 
-        // Маппинг статов
-        val statsMap = statService.statsToMap(stats)
-
         // Маппинг ачивок
         val achievementsMap = achievementService.achievementsToMap(achievements)
         val achievementCount = achievementsMap.values.count { it }
@@ -44,23 +40,21 @@ class PokerCommand(
         val money = (points / 1000L) * 100L
         val diceSet = user.enabledDiceSet
 
-        // Анализировать стату
-        val highScore: Boolean = statsMap[EStats.HIGHEST_SCORE]!! < points
+        // Обновить стату в БД
+        val highScore: Boolean = stats.highestScore < points
         if (diceSet != null) {
-            statService.analyseStats(
-                statsMap = statsMap,
+            statService.changeAndUpdateStats(
+                stats = stats,
                 handType = handType,
                 points = points,
                 money = money,
                 diceSet = diceSet.systemName
             )
         }
-        // Обновить стату в БД
-        statService.statsToEntityAndUpdate(stats, statsMap)
 
         // Анализировать ачивки
         val newAchievements = achievementService.analyseAchievements(
-            statsMap = statsMap,
+            stats = stats,
             achievementsMap = achievementsMap,
             points = points,
             user = user

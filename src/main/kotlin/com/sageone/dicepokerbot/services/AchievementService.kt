@@ -3,7 +3,6 @@ package com.sageone.dicepokerbot.services
 import com.sageone.dicepokerbot.BetaTester
 import com.sageone.dicepokerbot.EAchievements
 import com.sageone.dicepokerbot.EDiceCombos
-import com.sageone.dicepokerbot.EStats
 import com.sageone.dicepokerbot.database.jpa.entity.AchievementsEntity
 import com.sageone.dicepokerbot.database.jpa.entity.StatsEntity
 import com.sageone.dicepokerbot.database.jpa.entity.UserEntity
@@ -80,42 +79,42 @@ class AchievementService {
     }
 
     fun analyseAchievements(
-        statsMap: MutableMap<EStats, Long>,
+        stats: StatsEntity,
         achievementsMap: MutableMap<EAchievements, Boolean>,
         points: Long,
         user: UserEntity
     ): MutableList<EAchievements> {
         val newAchievements = mutableListOf<EAchievements>()
-        if (!achievementsMap[EAchievements.SNAKE_EYES]!! && (statsMap[EStats.HIGH_CARD]!! >= EAchievements.SNAKE_EYES.conditionRequirement)) {
+        if (!achievementsMap[EAchievements.SNAKE_EYES]!! && (stats.highCard >= EAchievements.SNAKE_EYES.conditionRequirement)) {
             achievementsMap[EAchievements.SNAKE_EYES] = true
             newAchievements.add(EAchievements.SNAKE_EYES)
         }
-        if (!achievementsMap[EAchievements.PEAR]!! && (statsMap[EStats.PAIRS_IN_A_ROW]!! >= EAchievements.PEAR.conditionRequirement)) {
+        if (!achievementsMap[EAchievements.PEAR]!! && (stats.pairsInARow >= EAchievements.PEAR.conditionRequirement)) {
             achievementsMap[EAchievements.PEAR] = true
             newAchievements.add(EAchievements.PEAR)
         }
-        if (!achievementsMap[EAchievements.AVENUE]!! && ((statsMap[EStats.SMALL_STRAIGHT]!! + statsMap[EStats.BIG_STRAIGHT]!!) >= EAchievements.AVENUE.conditionRequirement)) {
+        if (!achievementsMap[EAchievements.AVENUE]!! && ((stats.smallStraight + stats.bigStraight) >= EAchievements.AVENUE.conditionRequirement)) {
             achievementsMap[EAchievements.AVENUE] = true
             newAchievements.add(EAchievements.AVENUE)
         }
-        if (!achievementsMap[EAchievements.LUCKY_NUMBER]!! && (statsMap[EStats.TRIPLE]!! >= EAchievements.LUCKY_NUMBER.conditionRequirement)) {
+        if (!achievementsMap[EAchievements.LUCKY_NUMBER]!! && (stats.triple >= EAchievements.LUCKY_NUMBER.conditionRequirement)) {
             achievementsMap[EAchievements.LUCKY_NUMBER] = true
             newAchievements.add(EAchievements.LUCKY_NUMBER)
         }
         if (!achievementsMap[EAchievements.LOW_STAKES]!! &&
-            (statsMap[EStats.HIGH_CARD]!! >= EAchievements.LOW_STAKES.conditionRequirement)
-            && (statsMap[EStats.PAIR]!! >= EAchievements.LOW_STAKES.conditionRequirement)
-            && (statsMap[EStats.TWO_PAIR]!! >= EAchievements.LOW_STAKES.conditionRequirement)
-            && (statsMap[EStats.TRIPLE]!! >= EAchievements.LOW_STAKES.conditionRequirement)
+            (stats.highCard >= EAchievements.LOW_STAKES.conditionRequirement)
+            && (stats.pair >= EAchievements.LOW_STAKES.conditionRequirement)
+            && (stats.twoPair >= EAchievements.LOW_STAKES.conditionRequirement)
+            && (stats.triple >= EAchievements.LOW_STAKES.conditionRequirement)
         ) {
             achievementsMap[EAchievements.LOW_STAKES] = true
             newAchievements.add(EAchievements.LOW_STAKES)
         }
-        if (!achievementsMap[EAchievements.WHITE_SET]!! && statsMap[EStats.WHITE_SET]!! >= EAchievements.WHITE_SET.conditionRequirement) {
+        if (!achievementsMap[EAchievements.WHITE_SET]!! && stats.handsPlayedWhiteSet >= EAchievements.WHITE_SET.conditionRequirement) {
             achievementsMap[EAchievements.WHITE_SET] = true
             newAchievements.add(EAchievements.WHITE_SET)
         }
-        if (!achievementsMap[EAchievements.BLACK_SET]!! && statsMap[EStats.BLACK_SET]!! >= EAchievements.BLACK_SET.conditionRequirement) {
+        if (!achievementsMap[EAchievements.BLACK_SET]!! && stats.handsPlayedBlackSet >= EAchievements.BLACK_SET.conditionRequirement) {
             achievementsMap[EAchievements.BLACK_SET] = true
             newAchievements.add(EAchievements.BLACK_SET)
         }
@@ -127,11 +126,11 @@ class AchievementService {
             achievementsMap[EAchievements.BIGGER_MONEY] = true
             newAchievements.add(EAchievements.BIGGER_MONEY)
         }
-        if (!achievementsMap[EAchievements.MILLIONAIRE]!! && statsMap[EStats.POINTS_EARNED]!! >= EAchievements.MILLIONAIRE.conditionRequirement) {
+        if (!achievementsMap[EAchievements.MILLIONAIRE]!! && stats.pointsEarned >= EAchievements.MILLIONAIRE.conditionRequirement) {
             achievementsMap[EAchievements.MILLIONAIRE] = true
             newAchievements.add(EAchievements.MILLIONAIRE)
         }
-        if (!achievementsMap[EAchievements.KING]!! && (statsMap[EStats.POKER]!! >= EAchievements.KING.conditionRequirement)) {
+        if (!achievementsMap[EAchievements.KING]!! && (stats.poker >= EAchievements.KING.conditionRequirement)) {
             achievementsMap[EAchievements.KING] = true
             newAchievements.add(EAchievements.KING)
         }
@@ -250,7 +249,7 @@ class AchievementService {
             EAchievements.PEAR ->
                 return "${bold("${achievement.resultText}:")} ${stats.pairsInARow}"
             EAchievements.AVENUE ->
-                return "${bold("${achievement.resultText}:")} ${stats.smallStraight!! + stats.bigStraight!!}"
+                return "${bold("${achievement.resultText}:")} ${stats.smallStraight + stats.bigStraight}"
             EAchievements.LUCKY_NUMBER ->
                 return "${bold("${achievement.resultText}:")} ${stats.triple}"
             EAchievements.LOW_STAKES ->

@@ -105,7 +105,7 @@ class BuyCommand(
 
             val cost = userService.readDiceSetCost(arguments[0])
             // Не хватает денег на покупку
-            if (cost > stats.moneyEarned!!) {
+            if (cost > stats.moneyEarned) {
                 result = emoji(10071) + "У вас недостаточно средств для покупки!"
                 result += "\n\n" + bold(EStats.MONEY_EARNED.description) + ": ${moneyFormatter(stats.moneyEarned!!)} $"
                 // Отправить ответ в чат
@@ -120,10 +120,9 @@ class BuyCommand(
             }
 
             // Совершить транзакцию
-            val statsMap = statService.statsToMap(stats)
-            statsMap.merge(EStats.MONEY_EARNED, cost, Long::minus)
+            stats.moneyEarned -= cost
             userService.linkDiceSet(user, listOf(arguments[0]))
-            statService.statsToEntityAndUpdate(stats, statsMap)
+            statService.updateStats(stats)
             result = "${emoji(127881)} " +
                     "Набор успешно приобретен!" +
                     " ${emoji(127881)}" +

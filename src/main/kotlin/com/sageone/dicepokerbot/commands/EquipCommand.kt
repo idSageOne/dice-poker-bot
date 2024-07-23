@@ -1,6 +1,5 @@
 package com.sageone.dicepokerbot.commands
 
-import com.sageone.dicepokerbot.services.StatService
 import com.sageone.dicepokerbot.services.UserService
 import com.sageone.dicepokerbot.utils.*
 import org.springframework.stereotype.Component
@@ -14,8 +13,7 @@ import org.telegram.telegrambots.meta.bots.AbsSender
 
 @Component
 class EquipCommand(
-    val userService: UserService,
-    val statService: StatService
+    val userService: UserService
 ) : BotCommand(ECommands.EQUIP.text, ECommands.EQUIP.description) {
 
     override fun processMessage(absSender: AbsSender, message: Message, arguments: Array<out String>?) {
