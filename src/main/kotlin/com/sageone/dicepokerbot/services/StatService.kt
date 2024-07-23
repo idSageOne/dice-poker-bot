@@ -70,8 +70,8 @@ class StatService {
             "white" -> stats.handsPlayedWhiteSet++
             "black" -> stats.handsPlayedBlackSet++
         }
-        stats.pointsEarned++
-        stats.moneyEarned++
+        stats.pointsEarned += points
+        stats.moneyEarned += money
         if (stats.highestScore < points) {
             stats.highestScore = points
         }
