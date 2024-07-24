@@ -91,7 +91,8 @@ class BuyCommand(
 
             // Набор уже есть у пользователя
             if (!shopDiceSets.contains(arguments[0])) {
-                result = emoji(10071) + "У вас уже есть этот набор!"
+                result = emoji(10071) + "У вас уже есть этот набор!" +
+                        "\n${code("/equip " + arguments[0])}"
                 // Отправить ответ в чат
                 absSender.execute(
                     createReply(
@@ -126,6 +127,7 @@ class BuyCommand(
             result = "${emoji(127881)} " +
                     "Набор успешно приобретен!" +
                     " ${emoji(127881)}" +
+                    "\n${code("/equip " + arguments[0])}" +
                     "\n\n" + bold(EStats.MONEY_EARNED.description) + ": ${moneyFormatter(stats.moneyEarned!!)} $"
 
             // Сгенерировать картинку
