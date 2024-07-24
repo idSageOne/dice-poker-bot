@@ -3,6 +3,7 @@ package com.sageone.dicepokerbot.services
 import com.sageone.dicepokerbot.BetaTester
 import com.sageone.dicepokerbot.EAchievements
 import com.sageone.dicepokerbot.EDiceCombos
+import com.sageone.dicepokerbot.EStats
 import com.sageone.dicepokerbot.database.jpa.entity.AchievementsEntity
 import com.sageone.dicepokerbot.database.jpa.entity.StatsEntity
 import com.sageone.dicepokerbot.database.jpa.entity.UserEntity
@@ -247,7 +248,8 @@ class AchievementService {
             EAchievements.SNAKE_EYES ->
                 return "${bold("${achievement.resultText}:")} ${stats.highCard}"
             EAchievements.PEAR ->
-                return "${bold("${achievement.resultText}:")} ${stats.pairsInARow}"
+                return "${bold("${achievement.resultText}:")} ${stats.pairsInARow}" +
+                "${bold("${EStats.MAX_PAIRS_IN_A_ROW.description}:")} ${stats.maxPairsInARow}"
             EAchievements.AVENUE ->
                 return "${bold("${achievement.resultText}:")} ${stats.smallStraight + stats.bigStraight}"
             EAchievements.LUCKY_NUMBER ->

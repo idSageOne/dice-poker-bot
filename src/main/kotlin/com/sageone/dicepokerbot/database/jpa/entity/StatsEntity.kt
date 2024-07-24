@@ -54,6 +54,9 @@ class StatsEntity {
     @Column(name = "pairs_in_a_row", nullable = false)
     var pairsInARow: Long = 0
 
+    @Column(name = "max_pairs_in_a_row", nullable = false)
+    var maxPairsInARow: Long = 0
+
     @Column(name = "points_earned", nullable = false)
     var pointsEarned: Long = 0
 

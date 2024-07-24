@@ -39,6 +39,7 @@ class MyScoreCommand(
                 "${bold("${EStats.WHITE_SET.description}:")} ${moneyFormatter(stats.handsPlayedWhiteSet)}\n" +
                 "${bold("${EStats.BLACK_SET.description}:")} ${moneyFormatter(stats.handsPlayedBlackSet)}\n" +
                 "${bold("${EStats.PAIRS_IN_A_ROW.description}:")} ${moneyFormatter(stats.pairsInARow)}\n" +
+                "${bold("${EStats.MAX_PAIRS_IN_A_ROW.description}:")} ${moneyFormatter(stats.maxPairsInARow)}\n" +
                 "${bold("${EStats.POINTS_EARNED.description}:")} ${moneyFormatter(stats.pointsEarned)}\n" +
                 "${bold("${EStats.MONEY_EARNED.description}:")} ${moneyFormatter(stats.moneyEarned)} $\n" +
                 "${bold("${EStats.HIGHEST_SCORE.description}:")} ${moneyFormatter(stats.highestScore)}\n"

@@ -75,6 +75,9 @@ class StatService {
         if (stats.highestScore < points) {
             stats.highestScore = points
         }
+        if (stats.pairsInARow > stats.maxPairsInARow) {
+            stats.maxPairsInARow = stats.pairsInARow
+        }
         updateStats(stats)
     }
 

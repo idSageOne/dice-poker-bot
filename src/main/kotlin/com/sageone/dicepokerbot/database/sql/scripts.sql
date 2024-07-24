@@ -9,7 +9,7 @@ create table dice_sets
     id           bigserial    not null primary key,
     system_name  varchar(255) not null default 'white',
     public_name  varchar(255) not null default 'Белый',
-    cost         integer                   default 10000,
+    cost         integer               default 10000,
     date_created timestamp(6)          default now()
 );
 
@@ -76,6 +76,7 @@ create table stats
     hands_played_white_set integer   not null default 0,
     hands_played_black_set integer   not null default 0,
     pairs_in_a_row         integer   not null default 0,
+    max_pairs_in_a_row     integer   not null default 0,
     points_earned          bigint    not null default 0,
     money_earned           bigint    not null default 0,
     highest_score          integer   not null default 0,
