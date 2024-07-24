@@ -248,7 +248,7 @@ class AchievementService {
             EAchievements.SNAKE_EYES ->
                 return "${bold("${achievement.resultText}:")} ${stats.highCard}"
             EAchievements.PEAR ->
-                return "${bold("${achievement.resultText}:")} ${stats.pairsInARow}" +
+                return "${bold("${achievement.resultText}:")} ${stats.pairsInARow}\n" +
                 "${bold("${EStats.MAX_PAIRS_IN_A_ROW.description}:")} ${stats.maxPairsInARow}"
             EAchievements.AVENUE ->
                 return "${bold("${achievement.resultText}:")} ${stats.smallStraight + stats.bigStraight}"
