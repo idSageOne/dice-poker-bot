@@ -24,14 +24,14 @@ class HelpCommand : BotCommand(ECommands.HELP.text, ECommands.HELP.description) 
         )
         if (message.chat.isUserChat) {
             ECommands.values().forEach {
-                if (it.isGroupChat == null || !it.isGroupChat) {
+                if (it != ECommands.RISE && (it.isGroupChat == null || !it.isGroupChat)) {
                     output.append("/${it.text} ${it.description}\n")
                 }
             }
         }
         else {
             ECommands.values().forEach {
-                if (it.isGroupChat == null || it.isGroupChat) {
+                if (it != ECommands.RISE && (it.isGroupChat == null || it.isGroupChat)) {
                     output.append("/${it.text} ${it.description}\n")
                 }
             }

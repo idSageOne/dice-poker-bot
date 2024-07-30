@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 
 @Component
 class BotMain(
-    @Value("\${telegram.token}")
+    @Value("\${telegram.dev.token}")
     token: String,
     commands: Set<BotCommand>,
 ) : TelegramLongPollingCommandBot(token) {
@@ -17,10 +17,9 @@ class BotMain(
         registerAll(*commands.toTypedArray())
     }
 
-    @Value("\${telegram.botName}")
+    @Value("\${telegram.dev.botName}")
     private val botName: String = ""
 
-    //TODO: проверить, работают ли пути из ямла и экранируются ли \
     @Value("\${filepath.main}")
     val resources: String = ""
 

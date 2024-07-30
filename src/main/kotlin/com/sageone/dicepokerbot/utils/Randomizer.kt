@@ -106,7 +106,7 @@ class Randomizer {
     }
 
     // Вернет случайное значение из заданного диапазона (включая оба значения)
-    private fun getRandomFromRange(from: Int, to: Int): Int {
+    fun getRandomFromRange(from: Int, to: Int): Int {
         return Random.nextInt(from, to + 1)
     }
 }

@@ -84,6 +84,8 @@ create table stats
 );
 create unique index stats_id_uindex on stats (id);
 
+alter table stats add column max_pairs_in_a_row     integer   not null default 0;
+
 create table achievements
 (
     id           bigserial not null primary key,
