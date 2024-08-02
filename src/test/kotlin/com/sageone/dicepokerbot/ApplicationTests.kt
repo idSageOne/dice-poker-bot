@@ -1,5 +1,7 @@
 package com.sageone.dicepokerbot
 
+import com.sageone.dicepokerbot.enums.EDiceCombos
+import com.sageone.dicepokerbot.enums.EStats
 import com.sageone.dicepokerbot.utils.Randomizer
 import com.sageone.dicepokerbot.utils.randomColor
 import org.junit.jupiter.api.Test

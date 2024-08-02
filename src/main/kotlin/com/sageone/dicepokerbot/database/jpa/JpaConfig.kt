@@ -1,6 +1,7 @@
 package com.sageone.dicepokerbot.database.jpa
 
-import com.sageone.dicepokerbot.BetaTester
+import com.sageone.dicepokerbot.roles.Admin
+import com.sageone.dicepokerbot.roles.BetaTester
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,6 +35,10 @@ class JpaConfig {
     @Bean
     @ConfigurationProperties(prefix = "beta-tester")
     fun betaTesterConfig() = BetaTester()
+
+    @Bean
+    @ConfigurationProperties(prefix = "admin")
+    fun adminConfig() = Admin()
 
     @Bean
     fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean? {

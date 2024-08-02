@@ -1,5 +1,6 @@
 package com.sageone.dicepokerbot.commands
 
+import com.sageone.dicepokerbot.enums.ECommands
 import com.sageone.dicepokerbot.services.UserService
 import com.sageone.dicepokerbot.utils.*
 import org.springframework.stereotype.Component

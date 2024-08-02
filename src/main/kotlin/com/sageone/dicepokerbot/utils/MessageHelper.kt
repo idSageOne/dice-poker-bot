@@ -21,6 +21,10 @@ fun emoji(decimalCode: Int): String {
     return String(Character.toChars(decimalCode))
 }
 
+fun emojiWrapper(decimalCode: Int, text: String): String {
+    return "${emoji(decimalCode)} $text ${emoji(decimalCode)}"
+}
+
 fun moneyFormatter(cost: Long): String {
     val moneyFlipped = cost.toString().reversed()
     var result = ""

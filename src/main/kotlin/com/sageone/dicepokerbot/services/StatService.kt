@@ -1,6 +1,6 @@
 package com.sageone.dicepokerbot.services
 
-import com.sageone.dicepokerbot.EDiceCombos
+import com.sageone.dicepokerbot.enums.EDiceCombos
 import com.sageone.dicepokerbot.database.jpa.entity.StatsEntity
 import com.sageone.dicepokerbot.database.jpa.entity.UserEntity
 import com.sageone.dicepokerbot.database.jpa.repositories.StatsRepository

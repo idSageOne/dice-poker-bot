@@ -1,4 +1,4 @@
-package com.sageone.dicepokerbot
+package com.sageone.dicepokerbot.enums
 
 enum class EDiceCombos(
     var systemName: String,

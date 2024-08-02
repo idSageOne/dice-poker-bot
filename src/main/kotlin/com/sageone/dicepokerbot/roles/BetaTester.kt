@@ -1,4 +1,4 @@
-package com.sageone.dicepokerbot
+package com.sageone.dicepokerbot.roles
 
 class BetaTester {
     var id: List<Long> = arrayListOf()

@@ -34,5 +34,6 @@ spring:
 # Server Config
 server:
   port: 8095
+# Roles Config
 beta-tester:
   id: [***]

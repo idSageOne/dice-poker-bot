@@ -1,5 +1,6 @@
 package com.sageone.dicepokerbot.commands
 
+import com.sageone.dicepokerbot.enums.ECommands
 import com.sageone.dicepokerbot.utils.bold
 import com.sageone.dicepokerbot.utils.createReply
 import com.sageone.dicepokerbot.utils.emoji
@@ -24,21 +25,22 @@ class HelpCommand : BotCommand(ECommands.HELP.text, ECommands.HELP.description) 
         )
         if (message.chat.isUserChat) {
             ECommands.values().forEach {
-                if (it != ECommands.RISE && (it.isGroupChat == null || !it.isGroupChat)) {
+                if (!it.isHidden) {
                     output.append("/${it.text} ${it.description}\n")
                 }
             }
         }
         else {
             ECommands.values().forEach {
-                if (it != ECommands.RISE && (it.isGroupChat == null || it.isGroupChat)) {
+                if (!it.isHidden && !it.onlyForUserChats) {
                     output.append("/${it.text} ${it.description}\n")
                 }
             }
         }
-        output.append(bold("\nБросайте кости и попробуйте набрать больше всех баллов!"))
-        output.append(bold("\nЗарабатывайте внутриигровые достижения!"))
-        output.append(bold("\nПерсонализируйте внешний вид своих кубиков!"))
+        output.append(bold("\n- Бросайте кости и попробуйте набрать больше всех баллов!"))
+        output.append(bold("\n- Выполняйте ежедневные задания!"))
+        output.append(bold("\n- Зарабатывайте внутриигровые достижения!"))
+        output.append(bold("\n- Персонализируйте внешний вид своих кубиков!"))
 
         absSender.execute(createReply(chatId = chatId, replyId = replyId, text = output.toString()))
 

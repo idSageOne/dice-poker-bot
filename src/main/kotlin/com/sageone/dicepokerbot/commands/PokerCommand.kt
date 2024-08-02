@@ -1,5 +1,6 @@
 package com.sageone.dicepokerbot.commands
 
+import com.sageone.dicepokerbot.enums.ECommands
 import com.sageone.dicepokerbot.services.AchievementService
 import com.sageone.dicepokerbot.services.StatService
 import com.sageone.dicepokerbot.services.UserService

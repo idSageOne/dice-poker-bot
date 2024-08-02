@@ -1,6 +1,6 @@
 package com.sageone.dicepokerbot.utils
 
-import com.sageone.dicepokerbot.EDiceCombos
+import com.sageone.dicepokerbot.enums.EDiceCombos
 import kotlin.random.Random
 
 class Randomizer {
@@ -96,8 +96,13 @@ class Randomizer {
 
     // Задать вероятность события (от 1 до 100), функция вернет, попали мы в вероятность или нет
     fun getChanceRoll(requiredPercentage: Int): Boolean {
+        val correctedRequirement = when (true) {
+            requiredPercentage > 100 -> 100
+            requiredPercentage < 1 -> 1
+            else -> requiredPercentage
+        }
         val rollResult = Random.nextInt(1, 101)
-        return rollResult <= requiredPercentage
+        return rollResult <= correctedRequirement
     }
 
     // Вернет случайный процент от 1 до 100
@@ -106,7 +111,7 @@ class Randomizer {
     }
 
     // Вернет случайное значение из заданного диапазона (включая оба значения)
-    fun getRandomFromRange(from: Int, to: Int): Int {
+    private fun getRandomFromRange(from: Int, to: Int): Int {
         return Random.nextInt(from, to + 1)
     }
 }

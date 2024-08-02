@@ -1,9 +1,9 @@
 package com.sageone.dicepokerbot.services
 
-import com.sageone.dicepokerbot.BetaTester
-import com.sageone.dicepokerbot.EAchievements
-import com.sageone.dicepokerbot.EDiceCombos
-import com.sageone.dicepokerbot.EStats
+import com.sageone.dicepokerbot.roles.BetaTester
+import com.sageone.dicepokerbot.enums.EAchievements
+import com.sageone.dicepokerbot.enums.EDiceCombos
+import com.sageone.dicepokerbot.enums.EStats
 import com.sageone.dicepokerbot.database.jpa.entity.AchievementsEntity
 import com.sageone.dicepokerbot.database.jpa.entity.StatsEntity
 import com.sageone.dicepokerbot.database.jpa.entity.UserEntity
