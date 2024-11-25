@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface StatsRepository : JpaRepository<StatsEntity, Long> {
-    fun findByUserId(user: UserEntity) : StatsEntity
-    fun countByUserId(user: UserEntity) : Int
-    fun findTop5ByOrderByPointsEarnedDesc() : List<StatsEntity>
-    fun findTop5ByOrderByMoneyEarnedDesc() : List<StatsEntity>
+    fun findByUserId(user: UserEntity): StatsEntity
+    fun countByUserId(user: UserEntity): Int
+    fun findTop5ByOrderByPointsDesc(): List<StatsEntity>
+    fun findTop5ByOrderByCurrentMoneyDesc(): List<StatsEntity>
 }

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface DiceSetRepository : JpaRepository<DiceSetEntity, Long> {
-    fun findDiceSetsEntityBySystemName(systemName: String) : DiceSetEntity
-    fun findAllByOrderByCostAsc() : MutableList<DiceSetEntity>
-    fun findAllByIdIsNotIn(diceSet: List<DiceSetEntity>) : List<DiceSetEntity>
-    fun findById(diceSet: DiceSetEntity) : DiceSetEntity
+    fun findBySystemName(systemName: String): DiceSetEntity
+    fun findAllByOrderByCostAsc(): MutableList<DiceSetEntity>
+    fun findAllByIdIsNotIn(diceSet: List<DiceSetEntity>): List<DiceSetEntity>
+    fun findById(diceSet: DiceSetEntity): DiceSetEntity
 }

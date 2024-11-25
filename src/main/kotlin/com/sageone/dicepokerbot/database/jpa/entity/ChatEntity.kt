@@ -4,22 +4,22 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "dice_sets")
-class DiceSetEntity {
+@Table(name = "chats")
+class ChatEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false)
     var id: Long? = null
 
-    @Column(name = "system_name", nullable = false, unique = true)
-    var systemName: String = ""
+    @Column(name = "telegram_id", nullable = false, unique = true)
+    var telegramId: Long? = null
 
-    @Column(name = "public_name", nullable = false, unique = true)
-    var publicName: String = ""
+    @Column(name = "is_group_chat", nullable = false)
+    var isGroupChat: Boolean = false
 
-    @Column(name = "cost", nullable = false)
-    var cost: Long = 0
+    @Column(name = "is_user_chat", nullable = false)
+    var isUserChat: Boolean = false
 
     @Column(name = "date_created", insertable = false)
     var dateCreated: Date? = null

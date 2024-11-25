@@ -1,6 +1,5 @@
 package com.sageone.dicepokerbot.commands
 
-import com.sageone.dicepokerbot.enums.EAchievements
 import com.sageone.dicepokerbot.enums.ECommands
 import com.sageone.dicepokerbot.services.AchievementService
 import com.sageone.dicepokerbot.services.StatService
@@ -25,15 +24,7 @@ class AchievementsCommand(
 
         val user = userService.createUser(message)
         val stats = statService.readOrCreateUserStats(user)
-        val achievements = achievementService.readOrCreateUserAchievements(user)
-        val achievementsMap = achievementService.achievementsToMap(achievements)
-        val unlockedAchievementsMap = mutableMapOf<EAchievements, Boolean>()
-        for (i in achievementsMap) {
-            if (i.value) {
-                unlockedAchievementsMap[i.key] = i.value
-            }
-        }
-        val text = achievementService.generateAllAchievementsText(user, stats, unlockedAchievementsMap)
+        val text = achievementService.generateAllAchievementsText(user, stats)
         val chatId = message.chat.id.toString()
         val replyId = message.messageId
         absSender.execute(

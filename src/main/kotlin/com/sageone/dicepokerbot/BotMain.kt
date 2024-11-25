@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 
 @Component
 class BotMain(
-    @Value("\${telegram.dev.token}")
+    @Value("\${telegram.prod.token}")
     token: String,
     commands: Set<BotCommand>,
 ) : TelegramLongPollingCommandBot(token) {
@@ -17,7 +17,7 @@ class BotMain(
         registerAll(*commands.toTypedArray())
     }
 
-    @Value("\${telegram.dev.botName}")
+    @Value("\${telegram.prod.botName}")
     private val botName: String = ""
 
     @Value("\${filepath.main}")
@@ -27,6 +27,7 @@ class BotMain(
     override fun processInvalidCommandUpdate(update: Update?) {
         println("Такой команды не существует. MessageId = ${update?.message?.messageId}")
     }
+
     override fun processNonCommandUpdate(update: Update?) {
         println("Не требует обработки, чат работает только с командами. MessageId = ${update?.message?.messageId}")
     }

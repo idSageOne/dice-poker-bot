@@ -1,6 +1,7 @@
 package com.sageone.dicepokerbot.commands
 
 import com.sageone.dicepokerbot.enums.ECommands
+import com.sageone.dicepokerbot.services.DiceSetService
 import com.sageone.dicepokerbot.services.UserService
 import com.sageone.dicepokerbot.utils.*
 import org.springframework.stereotype.Component
@@ -14,7 +15,8 @@ import org.telegram.telegrambots.meta.bots.AbsSender
 
 @Component
 class EquipCommand(
-    val userService: UserService
+    val userService: UserService,
+    val diceSetService: DiceSetService
 ) : BotCommand(ECommands.EQUIP.text, ECommands.EQUIP.description) {
 
     override fun processMessage(absSender: AbsSender, message: Message, arguments: Array<out String>?) {
@@ -24,20 +26,21 @@ class EquipCommand(
         if (message.chat.isUserChat) {
             // Инициализировать
             val user = userService.createUser(message)
-            val ownedDiceSets = userService.createOwnedDiceSetMap(user)
+            val ownedDiceSets = diceSetService.createOwnedDiceSetMap(user)
             var result = emoji(10071) + "Укажите одно корректное название набора!"
 
             // Не пришло название набора
             if (arguments == null || arguments.isEmpty()) {
                 // Сформировать текст
-                result = "${bold("${emoji(128302)} Ваши наборы кубиков ${emoji(128302)}")}\n\n"
+                result = emojiWrapper(128302, bold("Ваши наборы кубиков")) + "\n\n"
                 var counter = 1
                 for (i in ownedDiceSets) {
                     result += bold("$counter. ${i.value}") +
                             "\n${code("/equip " + i.key)}\n"
                     counter++
                 }
-                result += "\n" + bold("Сейчас используется набор") + ": ${user.enabledDiceSet!!.publicName}"
+                result += "\n" + bold("Сейчас используется набор") + ": " +
+                        diceSetService.readUserEnabledDiceSet(user).publicName
 
                 val file = InputFile(generateDiceSetImage(ownedDiceSets))
                 // Отправить ответ в чат
@@ -52,7 +55,7 @@ class EquipCommand(
                 return
             }
 
-            val diceSets = userService.createDiceSetMap()
+            val diceSets = diceSetService.createDiceSetMap()
             // Пришло неверное название набора
             var incorrectNameCounter = 0
             for (i in diceSets) {
@@ -87,15 +90,12 @@ class EquipCommand(
             }
 
             // Совершить транзакцию
-            val userSet = userService.diceSetRepository.findDiceSetsEntityBySystemName(arguments[0])
-            user.enabledDiceSet = userSet
-            userService.userRepository.save(user)
-            result = "${emoji(128511)} " +
-                    "Вы применили новый внешний вид!" +
-                    " ${emoji(128511)}"
+            val userSet = diceSetService.diceSetRepository.findBySystemName(arguments[0])
+            diceSetService.enableUserDiceSet(user, userSet)
+            result = emojiWrapper(128511, "Вы применили новый внешний вид!")
 
             // Сгенерировать картинку
-            val userSetMap = mutableMapOf(userSet.systemName!! to userSet.publicName!!)
+            val userSetMap = mutableMapOf(userSet.systemName to userSet.publicName)
             val file = InputFile(generateDiceSetImage(userSetMap))
             // Отправить ответ в чат
             absSender.execute(
@@ -112,7 +112,7 @@ class EquipCommand(
                 createReply(
                     chatId = chatId,
                     replyId = replyId,
-                    text = emoji(10071) + "смены внешнего вида доступны только в личном чате с ботом!"
+                    text = emoji(10071) + "Смена внешнего вида доступна только в личном чате с ботом!"
                 )
             )
         }

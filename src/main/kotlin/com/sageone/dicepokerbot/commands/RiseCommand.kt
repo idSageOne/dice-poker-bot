@@ -3,6 +3,7 @@ package com.sageone.dicepokerbot.commands
 import com.sageone.dicepokerbot.botStartDate
 import com.sageone.dicepokerbot.contextStartDate
 import com.sageone.dicepokerbot.enums.ECommands
+import com.sageone.dicepokerbot.services.UserService
 import com.sageone.dicepokerbot.utils.bold
 import com.sageone.dicepokerbot.utils.createReply
 import org.springframework.stereotype.Component
@@ -15,13 +16,20 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 @Component
-class RiseCommand : BotCommand(ECommands.RISE.text, ECommands.RISE.description) {
+class RiseCommand(
+    val userService: UserService
+) : BotCommand(ECommands.RISE.text, ECommands.RISE.description) {
 
     override fun processMessage(absSender: AbsSender, message: Message, arguments: Array<out String>?) {
+
+        userService.createUser(message)
+
         val chatId = message.chat.id.toString()
         val replyId = message.messageId
+
         val contextUptime = Duration.between(contextStartDate, botStartDate)
         val botUptime = Duration.between(botStartDate, LocalDateTime.now())
+
         var result = bold("Контекст поднялся за: ") +
                 "\n${contextUptime.toSecondsPart()}.${contextUptime.toMillisPart()} сек" +
                 "\n\n" +

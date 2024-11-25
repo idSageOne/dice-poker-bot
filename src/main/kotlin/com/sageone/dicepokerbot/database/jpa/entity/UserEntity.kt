@@ -21,11 +21,13 @@ class UserEntity {
     @Column(name = "is_bot", nullable = false)
     var isBot: Boolean? = null
 
+    @Column(name = "is_alpha_tester", nullable = false)
+    var isAlphaTester: Boolean = false
+
+    @Column(name = "is_beta_tester", nullable = false)
+    var isBetaTester: Boolean = false
+
     @Column(name = "date_created", insertable = false)
     var dateCreated: Date? = null
-
-    @ManyToOne(cascade = [CascadeType.MERGE])
-    @JoinColumn(name = "enabled_dice_set_id", nullable = false)
-    var enabledDiceSet: DiceSetEntity? = null
 
 }

@@ -2,6 +2,7 @@ package com.sageone.dicepokerbot.commands
 
 import com.sageone.dicepokerbot.enums.ECommands
 import com.sageone.dicepokerbot.services.AchievementService
+import com.sageone.dicepokerbot.services.DiceSetService
 import com.sageone.dicepokerbot.services.StatService
 import com.sageone.dicepokerbot.services.UserService
 import com.sageone.dicepokerbot.utils.*
@@ -18,7 +19,8 @@ import org.telegram.telegrambots.meta.bots.AbsSender
 class PokerCommand(
     val userService: UserService,
     val statService: StatService,
-    val achievementService: AchievementService
+    val achievementService: AchievementService,
+    val diceSetService: DiceSetService
 ) : BotCommand(ECommands.POKER.text, ECommands.POKER.description) {
 
     override fun processMessage(absSender: AbsSender, message: Message, arguments: Array<out String>?) {
@@ -27,44 +29,37 @@ class PokerCommand(
         val randomizer = Randomizer()
         val user = userService.createUser(message)
         val stats = statService.readOrCreateUserStats(user)
-        val achievements = achievementService.readOrCreateUserAchievements(user)
-
-        // Маппинг ачивок
-        val achievementsMap = achievementService.achievementsToMap(achievements)
-        val achievementCount = achievementsMap.values.count { it }
+        val achievementCount = achievementService.countUserAchievements(user)
 
         // Бросить кости
-        val luckyRoll = randomizer.getChanceRoll(achievementCount)
+        val luckyRoll = randomizer.getChanceRoll(achievementCount + (stats.unluckyInARow.toInt() * 10))
         val diceRoll = randomizer.getDicePokerHand()
         val handType = randomizer.getHandType(diceRoll)
-        val points = randomizer.countHandPoints(diceRoll, handType, achievementCount, luckyRoll).toLong()
+        val superMult = achievementService.checkUserHasSuperMult(user, stats.newGamePlus)
+        val points = randomizer.countHandPoints(diceRoll, handType, achievementCount, luckyRoll, superMult).toLong()
         val money = (points / 1000L) * 100L
-        val diceSet = user.enabledDiceSet
+        val diceSet = diceSetService.readUserEnabledDiceSet(user)
 
         // Обновить стату в БД
         val highScore: Boolean = stats.highestScore < points
-        if (diceSet != null) {
-            statService.changeAndUpdateStats(
-                stats = stats,
-                handType = handType,
-                points = points,
-                money = money,
-                diceSet = diceSet.systemName
-            )
-        }
-
-        // Анализировать ачивки
-        val newAchievements = achievementService.analyseAchievements(
+        statService.changeAndUpdateStats(
             stats = stats,
-            achievementsMap = achievementsMap,
+            diceRoll = diceRoll,
+            handType = handType,
+            luckyRoll = luckyRoll,
             points = points,
+            money = money,
+            diceSet = diceSet.systemName
+        )
+
+        // Обновить ачивки в БД
+        val newAchievements = achievementService.changeAndUpdateAchievements(
+            stats = stats,
             user = user
         )
-        // Обновить ачивки в БД
-        achievementService.achievementsToEntityAndUpdate(achievements, achievementsMap)
 
         // Отправить картинку в чат
-        val file = InputFile(generatePokerImage(diceRoll, diceSet!!.systemName!!))
+        val file = InputFile(generatePokerImage(diceRoll, diceSet.systemName))
         var text = "${bold(handType.comboText)} ${moneyFormatter(points)} баллов"
         if (luckyRoll) {
             text += "\n\n${bold(italic("${emoji(127808)} Счастливый бросок ${emoji(127808)} "))}"

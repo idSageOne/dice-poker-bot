@@ -17,16 +17,16 @@ import org.telegram.telegrambots.meta.bots.AbsSender
 @Component
 class TopScoreCommand(
     val statService: StatService
-) : BotCommand(ECommands.TOPSCORE.text, ECommands.TOPSCORE.description) {
+) : BotCommand(ECommands.TOP_SCORE.text, ECommands.TOP_SCORE.description) {
 
     override fun processMessage(absSender: AbsSender, message: Message, arguments: Array<out String>?) {
 
         val topScorers = statService.readTopPoints()
-        var result = "${bold(ECommands.TOPSCORE.description)}\n"
+        var result = "${bold(ECommands.TOP_SCORE.description)}\n"
         if (topScorers != null) {
             for (i in topScorers.indices) {
                 val username = topScorers[i].userId!!.telegramHandle
-                val points = topScorers[i].pointsEarned
+                val points = topScorers[i].points
                 result += "\n${i + 1}. $username:   " +
                         "${bold("${moneyFormatter(points)} баллов")}\n"
             }

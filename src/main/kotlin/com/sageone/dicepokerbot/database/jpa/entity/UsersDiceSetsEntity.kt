@@ -4,8 +4,8 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "users_available_dice_sets")
-class UsersAvailableDiceSetsEntity {
+@Table(name = "users_dice_sets")
+class UsersDiceSetsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +19,9 @@ class UsersAvailableDiceSetsEntity {
     @ManyToOne(cascade = [CascadeType.MERGE])
     @JoinColumn(name = "available_set_id", nullable = false)
     var availableSetId: DiceSetEntity? = null
+
+    @Column(name = "enabled", nullable = false)
+    var enabled: Boolean = false
 
     @Column(name = "date_created", insertable = false)
     var dateCreated: Date? = null

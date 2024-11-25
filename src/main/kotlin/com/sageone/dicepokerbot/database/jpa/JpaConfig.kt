@@ -1,6 +1,7 @@
 package com.sageone.dicepokerbot.database.jpa
 
 import com.sageone.dicepokerbot.roles.Admin
+import com.sageone.dicepokerbot.roles.AlphaTester
 import com.sageone.dicepokerbot.roles.BetaTester
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -31,6 +32,10 @@ class JpaConfig {
 
     @Bean
     fun dataSource() = HikariDataSource(hikariConfig())
+
+    @Bean
+    @ConfigurationProperties(prefix = "alpha-tester")
+    fun alphaTesterConfig() = AlphaTester()
 
     @Bean
     @ConfigurationProperties(prefix = "beta-tester")

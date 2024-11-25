@@ -41,7 +41,8 @@ class Randomizer {
         handValues: IntArray,
         handType: EDiceCombos,
         achievementCount: Int,
-        luckyRoll: Boolean
+        luckyRoll: Boolean,
+        superMult: Boolean
     ): Int {
         val diceCount = IntArray(6)
         for (i in 0..4) {
@@ -64,34 +65,38 @@ class Randomizer {
         }
 
         // Бонус за каждое открытое достижение
-        val achievementPoints = getRandomFromRange(3, 7) * 100 * achievementCount
+        val achievementPoints = 250 * achievementCount
 
         // Бонус за счастливый бросок
         val luckyPoints = if (luckyRoll) {
             when (true) {
                 achievementCount == 0 -> 0
-                achievementCount in 1..5 -> 500
-                achievementCount in 6..10 -> 2500
+                achievementCount in 1..3 -> 100
+                achievementCount in 4..8 -> 250
+                achievementCount in 9..12 -> 500
+                achievementCount in 13..20 -> 1000
+                achievementCount in 21..30 -> 2500
                 else -> 5000
             }
-        }
-        else 0
+        } else 0
 
         // Множитель за все открытые достижения
-        val superMult = if (achievementCount == 13) {
+        val finalMult = if (superMult) {
             2
         } else {
             1
         }
 
-        println("\nОснова за комбо = ${handType.basePoints}" +
-                "\nБонус за комбо = ${(handPoints + comboPoints) * diceMult}" +
-                "\nБонус за ачивки = $achievementPoints" +
-                "\nСчастливый бросок = $luckyPoints" +
-                "\nМножитель за ачивки = $superMult")
+        println(
+            "\nОснова за комбо = ${handType.basePoints}" +
+                    "\nБонус за комбо = ${(handPoints + comboPoints) * diceMult}" +
+                    "\nБонус за ачивки = $achievementPoints" +
+                    "\nСчастливый бросок = $luckyPoints" +
+                    "\nМножитель за ачивки = $finalMult"
+        )
 
         // Итоговый бонус
-        return (handType.basePoints + (handPoints + comboPoints) * diceMult + achievementPoints + luckyPoints) * superMult
+        return (handType.basePoints + (handPoints + comboPoints) * diceMult + achievementPoints + luckyPoints) * finalMult
     }
 
     // Задать вероятность события (от 1 до 100), функция вернет, попали мы в вероятность или нет

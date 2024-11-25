@@ -1,7 +1,8 @@
 package com.sageone.dicepokerbot.commands
 
-import com.sageone.dicepokerbot.enums.EStats
 import com.sageone.dicepokerbot.enums.ECommands
+import com.sageone.dicepokerbot.enums.EStats
+import com.sageone.dicepokerbot.services.DiceSetService
 import com.sageone.dicepokerbot.services.StatService
 import com.sageone.dicepokerbot.services.UserService
 import com.sageone.dicepokerbot.utils.*
@@ -17,7 +18,8 @@ import org.telegram.telegrambots.meta.bots.AbsSender
 @Component
 class BuyCommand(
     val userService: UserService,
-    val statService: StatService
+    val statService: StatService,
+    val diceSetService: DiceSetService
 ) : BotCommand(ECommands.BUY.text, ECommands.BUY.description) {
 
     override fun processMessage(absSender: AbsSender, message: Message, arguments: Array<out String>?) {
@@ -28,23 +30,21 @@ class BuyCommand(
             // Инициализировать
             val user = userService.createUser(message)
             val stats = statService.readOrCreateUserStats(user)
-            val shopDiceSets = userService.createShopDiceSetsMap(user)
+            val shopDiceSets = diceSetService.createShopDiceSetsMap(user)
             var result = emoji(10071) + "Укажите одно корректное название набора для покупки!"
 
             // Не пришло название набора для покупки
             if (arguments == null || arguments.isEmpty()) {
                 // Сформировать текст
                 if (shopDiceSets.isNotEmpty()) {
-                    result = "${emoji(127873)} " +
-                            "${bold("Вам доступны следующие наборы кубиков")} " +
-                            "${emoji(127873)}\n\n"
+                    result = emojiWrapper(127873, bold("Вам доступны следующие наборы кубиков")) + "\n\n"
                     var counter = 1
                     for (i in shopDiceSets) {
-                        result += bold("$counter. ${i.value}: ${moneyFormatter(userService.readDiceSetCost(i.key))} $") +
+                        result += bold("$counter. ${i.value}: ${moneyFormatter(diceSetService.readDiceSetCost(i.key))} $") +
                                 "\n${code("/buy " + i.key)}\n"
                         counter++
                     }
-                    result += "\n" + bold(EStats.MONEY_EARNED.description) + ": ${moneyFormatter(stats.moneyEarned!!)} $"
+                    result += "\n" + bold(EStats.CURRENT_MONEY.description) + ": ${moneyFormatter(stats.currentMoney)} $"
                     val file = InputFile(generateDiceSetImage(shopDiceSets))
                     // Отправить ответ в чат
                     absSender.execute(
@@ -58,7 +58,7 @@ class BuyCommand(
                     return
                 }
 
-                result = emoji(10071) + bold(" Для вас нет доступных наборов кубиков")
+                result = emoji(10071) + bold("Для вас нет доступных наборов кубиков")
                 // Отправить ответ в чат
                 absSender.execute(
                     createReply(
@@ -70,7 +70,43 @@ class BuyCommand(
                 return
             }
 
-            val diceSets = userService.readDiceSets()
+            // Покупка токенов
+            if (arguments[0] == "tokens") {
+                val cost = 1000000
+                // Не хватает денег на покупку
+                if (cost > stats.currentMoney) {
+                    result = emoji(10071) + "У вас недостаточно средств для покупки!"
+                    result += "\n\n" + bold(EStats.CURRENT_MONEY.description) + ": ${moneyFormatter(stats.currentMoney)} $"
+                    // Отправить ответ в чат
+                    absSender.execute(
+                        createReply(
+                            chatId = chatId,
+                            replyId = replyId,
+                            text = result
+                        )
+                    )
+                    return
+                }
+                // Совершить транзакцию
+                stats.currentMoney -= cost
+                stats.tokens += 10
+                statService.updateStats(stats)
+                result = "${emoji(127881)} " +
+                        "Секретная валюта успешно приобретена!" +
+                        " ${emoji(127881)}" +
+                        "\n\n" + bold(EStats.CURRENT_MONEY.description) + ": ${moneyFormatter(stats.currentMoney)} $"
+                // Отправить ответ в чат
+                absSender.execute(
+                    createReply(
+                        chatId = chatId,
+                        replyId = replyId,
+                        text = result
+                    )
+                )
+                return
+            }
+
+            val diceSets = diceSetService.readDiceSets()
             // Пришло неверное название набора
             var incorrectNameCounter = 0
             for (i in diceSets) {
@@ -105,11 +141,11 @@ class BuyCommand(
                 return
             }
 
-            val cost = userService.readDiceSetCost(arguments[0])
+            val cost = diceSetService.readDiceSetCost(arguments[0])
             // Не хватает денег на покупку
-            if (cost > stats.moneyEarned) {
+            if (cost > stats.currentMoney) {
                 result = emoji(10071) + "У вас недостаточно средств для покупки!"
-                result += "\n\n" + bold(EStats.MONEY_EARNED.description) + ": ${moneyFormatter(stats.moneyEarned!!)} $"
+                result += "\n\n" + bold(EStats.CURRENT_MONEY.description) + ": ${moneyFormatter(stats.currentMoney!!)} $"
                 // Отправить ответ в чат
                 absSender.execute(
                     createReply(
@@ -122,18 +158,17 @@ class BuyCommand(
             }
 
             // Совершить транзакцию
-            stats.moneyEarned -= cost
-            userService.linkDiceSet(user, listOf(arguments[0]))
+            stats.currentMoney -= cost
+            diceSetService.linkDiceSetToUser(user, arguments[0], true)
             statService.updateStats(stats)
             result = "${emoji(127881)} " +
-                    "Набор успешно приобретен!" +
+                    "Набор успешно приобретен и применен!" +
                     " ${emoji(127881)}" +
-                    "\n${code("/equip " + arguments[0])}" +
-                    "\n\n" + bold(EStats.MONEY_EARNED.description) + ": ${moneyFormatter(stats.moneyEarned!!)} $"
+                    "\n\n" + bold(EStats.CURRENT_MONEY.description) + ": ${moneyFormatter(stats.currentMoney!!)} $"
 
             // Сгенерировать картинку
-            val userSet = userService.diceSetRepository.findDiceSetsEntityBySystemName(arguments[0])
-            val userSetMap = mutableMapOf(userSet.systemName!! to userSet.publicName!!)
+            val userSet = diceSetService.diceSetRepository.findBySystemName(arguments[0])
+            val userSetMap = mutableMapOf(userSet.systemName to userSet.publicName)
             val file = InputFile(generateDiceSetImage(userSetMap))
             // Отправить ответ в чат
             absSender.execute(
