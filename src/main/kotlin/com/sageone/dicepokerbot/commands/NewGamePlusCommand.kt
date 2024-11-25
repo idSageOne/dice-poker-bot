@@ -41,7 +41,7 @@ class NewGamePlusCommand(
 
         val allAchievements = achievementService.readAchievements()
         val ownedAchievements = achievementService.readUserAchievements(user, stats.newGamePlus)
-        val canStartNGPlus = (ownedAchievements.size % allAchievements.size) == 0
+        val canStartNGPlus = (ownedAchievements.size % allAchievements.size) == 0 && ownedAchievements.size >= 14
         val achievementDifference = allAchievements.size - ownedAchievements.size
 
         // Не пришло параметров или пришло неверное название
